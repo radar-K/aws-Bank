@@ -60,12 +60,16 @@ app.listen(port, () => {
 //Grundstruktur -------------->
 
 // Generera engångslösenord
-// function generateOTP() {
-//     // Generera en sexsiffrig numerisk OTP
-//     const otp = Math.floor(100000 + Math.random() * 900000);
-//     return otp.toString();
-// }
+function generateOTP() {
+  // Generera en sexsiffrig numerisk OTP
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  return otp.toString();
+}
 
 // Din kod här. Skriv dina arrayer
+
+const users = [];
+const accounts = [];
+const sessions = [];
 
 // Din kod här. Skriv dina routes:
