@@ -1,3 +1,4 @@
+// databas med sql
 import express from "express"; //  Skapar och hanterar en webbserver.
 import bodyParser from "body-parser"; //  Gör att servern kan läsa JSON och formulärdata.
 import cors from "cors"; //  cors → Tillåter förfrågningar från andra domäner.
@@ -26,29 +27,6 @@ async function query(sql, params) {
   return results;
 }
 
-// app är en Express-applikation, som hanterar HTTP-förfrågningar och svar.
-
-// Middleware-funktioner/Route-handler har alltid tre parametrar:
-// req → Innehåller all information om förfrågan (t.ex. headers, body).
-// res → Används för att skicka svar till klienten.
-// next() → Skickar requesten vidare till nästa middleware eller route.
-
-app.post("/users", async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const sql = "INSERT INTO users (username, password) VALUES(?, ?)";
-    const params = [username, password];
-    const result = await query(sql, params);
-    console.log("hej");
-    console.log("result", result);
-
-    res.send("user created");
-  } catch (error) {
-    res.status(500).send("Error creating user", error);
-  }
-});
-
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -57,6 +35,7 @@ app.use(bodyParser.json());
 app.listen(port, () => {
   console.log(`Bankens backend körs på http://localhost:${port}`);
 });
+
 //Grundstruktur -------------->
 
 // Generera engångslösenord
@@ -66,10 +45,68 @@ function generateOTP() {
   return otp.toString();
 }
 
-// Din kod här. Skriv dina arrayer
+// SKAPA ANVÄNDARE - create - insert med sql
+app.post("/users", async (req, res) => {
+  const { username, password } = req.body;
 
-const users = [];
-const accounts = [];
-const sessions = [];
+  // Försök att infoga användaren i databasen
+  try {
+    const sql = "INSERT INTO users (username, password) VALUES(?, ?)";
+    const params = [username, password]; // en array som innehåller de värden som ska infogas i databasen. (i ? i sql frågan?
+    const result = await query(sql, params);
+    console.log("result", result); // loggar resultatet från databasinsättningen.
 
-// Din kod här. Skriv dina routes:
+    res.send("user created");
+  } catch (error) {
+    res.status(500).send("Error creating user", error);
+  }
+});
+
+// LOGGA IN - Read - Select med sql
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const sql = "SELECT * FROM users WHERE username = ? and password = ?";
+    const params = [username, password];
+    const result = await query(sql, params);
+
+    console.log("result", result);
+    res.json(result);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error creating user", error: error.message });
+  }
+});
+
+// UPPDATERA lösenord - Update
+app.put("/new-password", async (req, res) => {
+  const { userId, newPassword } = req.body;
+
+  try {
+    const sql = "UPDATE users SET password = ? WHERE id = ? "; // uppdatera vilken tabell (users) och vilken kolumn (password)
+    const params = [newPassword, userId];
+
+    const result = await query(sql, params);
+    res.json(result);
+  } catch {
+    res.status(500).send("error login", error);
+  }
+});
+
+//Delete
+app.delete("/users", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const sql = "DELETE FROM users WHERE id = ?";
+    const params = [userId];
+
+    const result = await query(sql, params);
+
+    res.json(result);
+  } catch {
+    res.status(500).send("error delete user", error);
+  }
+});

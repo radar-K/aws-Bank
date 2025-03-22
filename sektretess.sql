@@ -118,3 +118,47 @@ Miljövariabler
 Miljövariabler används för att lagra konfigurationer som portnummer, API-nycklar eller databasinformation.
 
 Vi använder process.env.PORT || 5000 i Express för att kunna ändra port utan att ändra koden.
+
+
+EXPRESS-ROUTE
+()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+
+* Express-route: (rutter) för att hantera inkommande HTTP-förfrågningar och skicka tillbaka svar. 
+ En route består av en HTTP-metod (GET, POST, PUT, DELETE osv.), en URL-path och en 
+ callback-funktion som körs när en matchande förfrågan tas emot.
+
+* SKAPA en route för GET-förfrågningar till "/"
+app.get('/', (req, res) => {
+    res.send('Hej, välkommen till min Express-app!');
+});
+
+   app: Express-applikationen.
+   METHOD: HTTP-metoden (t.ex. get, post, put, delete).
+   PATH: URL-sökvägen som matchas.
+
+
+// Middleware-funktioner/Route-handler har alltid tre parametrar:
+// req → Innehåller all information om förfrågan (t.ex. headers, body).
+// res → Används för att skicka svar till klienten.
+// next() → Skickar requesten vidare till nästa middleware eller route.
+
+
+* EXTRAHERA data
+req.body innehåller data som skickats från klienten (t.ex. via en HTML-formulär eller API-anrop).
+
+RES - Ett objekt som representerar HTTP-svaret från servern till klienten. 
++--------------------------+-----------------------------------------------------------+
+| **Metod**                | **Beskrivning**                                            |
++--------------------------+-----------------------------------------------------------+
+| **res.send()**            | Skickar ett enkelt svar, t.ex. text, HTML eller objekt.   |
+| **Exempel:**              | res.send("Hej världen!")                                  |
++--------------------------+-----------------------------------------------------------+
+| **res.json()**            | Skickar JSON-data till klienten.                          |
+| **Exempel:**              | res.json({ name: "Alice", age: 25 })                      |
++--------------------------+-----------------------------------------------------------+
+| **res.status()**          | Sätter HTTP-statuskod.                                    |
+| **Exempel:**              | res.status(404).send("Not Found")                         |
++--------------------------+-----------------------------------------------------------+
+| **res.cookie()**          | Sätter en cookie i webbläsaren.                           |
+| **Exempel:**              | res.cookie("user", "Alice")                               |
++--------------------------+-----------------------------------------------------------+
