@@ -1,7 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { TbPigMoney } from "react-icons/tb";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -33,46 +38,58 @@ export default function Signup() {
     alert("Användaren skapad (simulerad, backend inte implementerad än)");
   };
 
-  const handleGoBack = () => {
-    router.back();
-  };
-
   return (
-    <div className="h-screen flex justify-center items-center relative">
+    <div className="h-screen flex justify-center items-center relative bg-white">
       <div className="w-full max-w-sm">
-        <h1 className="text-center mb-4 text-3xl">Skapa konto</h1>
+        <form onSubmit={submit} className="flex flex-col gap-6 p-6">
+          <div className="flex flex-col items-center gap-2">
+            <Link
+              href="/signup"
+              className="flex flex-col items-center gap-2 font-medium"
+            >
+              <div className="flex size-8 items-center justify-center rounded-md">
+                <TbPigMoney className="text-7xl" />
+              </div>
+            </Link>
+            <h1 className="text-xl font-bold">Welcome to Fiffle Banken</h1>
 
-        <form
-          onSubmit={submit}
-          className="flex flex-col gap-4 p-6 border rounded-lg shadow-md bg-white"
-        >
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="p-2 border rounded-md"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="p-2 border rounded-md"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-          >
+            <div className="text-center text-sm">
+              Already have an account?{" "}
+              <Link href="/login" className="underline underline-offset-4">
+                Sign in
+              </Link>
+            </div>
+          </div>
+          <div className="grid gap-3">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="Your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="border p-2 rounded-md"
+            />
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="border p-2 rounded-md"
+            />
+          </div>
+
+          <Button type="submit" className="w-full">
             Create user
-          </button>
+          </Button>
         </form>
-        <button
-          onClick={handleGoBack}
-          className="absolute top-4 left-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-        >
-          Go back
-        </button>
       </div>
     </div>
   );
