@@ -8,7 +8,6 @@ import { TbPigMoney } from "react-icons/tb";
 import { BsBank } from "react-icons/bs";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
-import { IoLogoSnapchat } from "react-icons/io";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
@@ -30,7 +29,7 @@ const data = {
   teams: [
     {
       name: "Fiffel Banken",
-      logo: IoLogoSnapchat,
+      logo: TbPigMoney,
       plan: "Enterprise",
     },
   ],
