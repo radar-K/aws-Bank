@@ -1,13 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  AudioWaveform,
-  Command,
-  Frame,
-  PieChart,
-  Settings2,
-} from "lucide-react";
+import { Frame, PieChart, Settings2 } from "lucide-react";
 
 import { LuMessageSquare } from "react-icons/lu";
 import { TbPigMoney } from "react-icons/tb";
