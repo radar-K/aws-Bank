@@ -59,7 +59,7 @@ export default function Signup() {
           JSON.stringify({ username: data.username, id: data.id })
         );
         // Redirect to dashboard
-        router.push("/dashboard");
+        router.push("/login");
       } else {
         setErrorMessage(data.message || "Något gick fel. Försök igen.");
       }

@@ -24,7 +24,7 @@ export function LoginForm({ className, ...props }) {
                 <TbPigMoney className="text-7xl" />
               </div>
             </Link>
-            <h1 className="text-xl font-bold">Welcome to Fiffel Banken</h1>
+            <h1 className="text-xl font-bold">Wälcome to Fiffel Banken</h1>
             <div className="text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link href="/signup" className="underline underline-offset-4">
