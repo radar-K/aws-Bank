@@ -86,7 +86,7 @@ export default function Signup() {
                 <TbPigMoney className="text-6xl" />
               </div>
             </Link>
-            <h1 className="text-xl font-bold">Välkommen till Fiffle Banken</h1>
+            <h1 className="text-xl font-bold">Wälcome to Fiffel Banken</h1>
 
             <div className="text-center text-sm">
               Already have an account?{" "}

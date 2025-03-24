@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import SignUp from "app/signup/page";
 
-export default function App() {
-  <></>;
+export default function Homepage() {
+  return (
+    <div>
+      <SignUp />
+    </div>
+  );
 }

@@ -1,11 +1,14 @@
 import React from "react";
+import { Dashboard } from "app/dashboard/components-dashboard/Dashboard";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
-      <p>dash</p>
+      <Dashboard />
     </div>
   );
 };
 
-export default page;
+export default Page;
