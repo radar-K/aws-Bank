@@ -95,12 +95,12 @@ export default function Signup() {
               </Link>
             </div>
           </div>
-          <div className="grid gap-3">
+          <div className="grid gap-3 pb-4">
             <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               type="text"
-              placeholder="Your username"
+              placeholder="m@example.com"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -140,6 +140,7 @@ export default function Signup() {
             )}
           </div>
 
+          <div className="p-4"></div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Creating user..." : "Create user"}
           </Button>

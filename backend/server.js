@@ -56,7 +56,7 @@ app.post("/users", async (req, res) => {
     const result = await query(sql, params);
     console.log("result", result); // loggar resultatet från databasinsättningen.
 
-    res.send("user created");
+    res.json({ message: "user created" });
   } catch (error) {
     res.status(500).send("Error creating user", error);
   }
