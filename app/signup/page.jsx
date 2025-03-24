@@ -74,12 +74,9 @@ export default function Signup() {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center relative bg-white">
+    <div className="h-screen flex justify-center items-center relative">
       <div className="w-full max-w-sm">
-        <form
-          onSubmit={submit}
-          className="flex flex-col gap-6 p-6 border rounded-lg shadow-sm"
-        >
+        <form onSubmit={submit} className="flex flex-col">
           <div className="flex flex-col items-center gap-2">
             <Link
               href="/"
