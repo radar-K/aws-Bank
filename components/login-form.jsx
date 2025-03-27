@@ -35,11 +35,19 @@ export function LoginForm({ className, ...props }) {
         body: JSON.stringify({ username, password }), // Hämtar från useState, och skickar användarnamn och lösenord som JSON till backend
       });
 
+      // response data som innehåller token från backend
       const data = await response.json();
 
       //response.ok är true om servern svarade med en lyckad statuskod (200–299).
-      // data.length > 0 kontrollerar om servern returnerade matchande användardata, vilket innebär att inloggningen lyckades.
-      if (response.ok && data.length > 0) {
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+
+        // Lagra data i webbläsarens localstorage
+        localStorage.setItem("username", data.user.username);
+
+        // Example: Personalized welcome message
+        // <p>Welcome, {localStorage.getItem("username")}!</p>
+
         router.push("/dashboard");
       } else {
         setError("Felaktigt användarnamn eller lösenord.");

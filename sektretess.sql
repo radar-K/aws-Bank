@@ -162,3 +162,43 @@ RES - Ett objekt som representerar HTTP-svaret från servern till klienten.
 | **res.cookie()**          | Sätter en cookie i webbläsaren.                           |
 | **Exempel:**              | res.cookie("user", "Alice")                               |
 +--------------------------+-----------------------------------------------------------+
+
+
+Vad är JWT-token och OAuth-baserad API-autentisering?
+< --------------------------------------------------- >
+🔹 JWT (JSON Web Token) – En säker metod för att skicka användarinformation
+JWT är en kompakt och säker token som används för att identifiera användare och skicka data mellan klient och server.
+Den är signerad (oftast med HMAC eller RSA) vilket gör att den inte kan ändras av någon annan än den som skapat den.
+Hur fungerar JWT?
+
+1. En användare loggar in (t.ex. via Shopify).
+2. Servern skapar en JWT-token som innehåller användar-ID och annan relevant data.
+3. Tokenen skickas tillbaka till klienten (PWA:n eller en extern tjänst).
+4. Klienten lagrar tokenen (i localStorage eller cookies).
+5. Vid framtida API-anrop skickas tokenen i Authorization-headern.
+6. Servern verifierar tokenen och hämtar användarinformation utan att behöva slå upp databasen varje gång.
+
+✅ Snabb och säker autentisering
+✅ Behöver ingen session på servern (stateless)
+✅ Enkel att använda mellan olika tjänster
+
+✅ PWA anpassar sig till skärmar, kan installeras som en app,
+ fungerar offline (via Service Workers), skickar pushnotiser,
+ laddar snabbare (caching) och lagrar data lokalt.
+
+OAuth-baserad API-autentisering – Standard för säker inloggning
+OAuth är ett autentiseringsprotokoll som används för att ge en tredjepartsapplikation (t.ex. en PWA) säker åtkomst till en användares data utan att dela lösenord.
+
+🔹 Hur fungerar OAuth?
+1. Användaren loggar in via Shopify (eller en annan OAuth-leverantör som Google, Facebook).
+2. Shopify genererar en "Auth Code" och skickar den till den externa PWA:n.
+3. PWA:n skickar Auth Code till Shopify API och byter den mot en "Access Token".
+4. PWA:n använder Access Token för att hämta användardata och göra API-anrop.
+
+OAuth 🔹 Ge tredjepartsappar åtkomst () JWT 🔹 Autentisering mellan klient och server
+Token-typ 🔹 Access Token + Refresh Token () Endast en token
+
+✅ WebGL (Web Graphics Library) - äldre
+✅ WebGPU (Web Graphics Processing Unit) - nyare
+
+

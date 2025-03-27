@@ -9,6 +9,8 @@ export function ActionCards({ addTransaction }) {
   const [transferAmount, setTransferAmount] = useState("");
   const [transferRecipient, setTransferRecipient] = useState("");
 
+  const getToken = () => localStorage.getItem("token");
+
   const handleDeposit = () => {
     const amount = parseFloat(depositAmount);
     if (isNaN(amount) || amount <= 0) return;

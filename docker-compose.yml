@@ -1,0 +1,17 @@
+services: # Definierar en tjänst (container) som ska köras
+  nextjs: # Namnet på tjänsten/container
+    build: ./ # Bygger en Docker-image från den aktuella katalogen (där Dockerfile finns)
+    ports: -"3000:3000" # Exponerar port 3000 i containern och gör den tillgänglig på värddatorn
+
+  build: ./backend # Anger vägen till Dockerfile i backend-mappen
+  ports:
+    - "3001:3001" # Mappning av port 3000 på värddatorn till port
+
+  mysql:
+    image: mysql:5.7
+    platform: linux/amd64
+    environment:
+      - MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE: bank
+    pors:
+      - "3307"

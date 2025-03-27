@@ -25,7 +25,7 @@ export function Dashboard() {
     {
       id: "3",
       date: new Date(2023, 10, 10),
-      description: "Groceries",
+      description: "Drugs",
       amount: -150,
       type: "expense",
       category: "Food",
@@ -40,7 +40,7 @@ export function Dashboard() {
     {
       id: "5",
       date: new Date(2023, 10, 20),
-      description: "Internet Bill",
+      description: "Coffe",
       amount: -75,
       type: "expense",
       category: "Utilities",
