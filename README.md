@@ -11,7 +11,7 @@ The project uses two main tables:
 2. **transactions** - Stores all financial transactions
    - id (primary key)
    - user_id (foreign key to users.id)
-   - type (deposit, expense, transfer)
+   - type (deposit, pay, send)
    - amount
    - description
    - category

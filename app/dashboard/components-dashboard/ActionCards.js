@@ -8,60 +8,140 @@ export function ActionCards({ addTransaction }) {
   const [billCategory, setBillCategory] = useState("");
   const [transferAmount, setTransferAmount] = useState("");
   const [transferRecipient, setTransferRecipient] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const getToken = () => localStorage.getItem("token");
 
-  const handleDeposit = () => {
+  const apiCall = async (url, method, data) => {
+    const token = getToken();
+
+    if (!token) {
+      setError("You need to be logged in to perform this action");
+      return null;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3001${url}`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: data ? JSON.stringify(data) : undefined,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "An error occurred");
+      }
+
+      return await response.json();
+    } catch (error) {
+      setError(error.message);
+      return null;
+    }
+  };
+
+  const handleDeposit = async () => {
     const amount = parseFloat(depositAmount);
     if (isNaN(amount) || amount <= 0) return;
 
-    addTransaction({
+    setIsLoading(true);
+    setError(null);
+
+    const transactionData = {
       description: `Quick Deposit${
         depositCategory ? ` - ${depositCategory}` : ""
       }`,
       amount,
       type: "deposit",
       category: depositCategory || "Income",
-    });
+    };
 
-    setDepositAmount("");
-    setDepositCategory("");
+    // First update UI for immediate feedback
+    addTransaction(transactionData);
+
+    // Then send to backend
+    const result = await apiCall("/transactions", "POST", transactionData);
+
+    if (result) {
+      // Clear form fields
+      setDepositAmount("");
+      setDepositCategory("");
+    }
+
+    setIsLoading(false);
   };
 
-  const handlePayBill = () => {
+  const handlePayBill = async () => {
     const amount = parseFloat(billAmount);
     if (isNaN(amount) || amount <= 0) return;
 
-    addTransaction({
+    setIsLoading(true);
+    setError(null);
+
+    const transactionData = {
       description: `Bill Payment${billCategory ? ` - ${billCategory}` : ""}`,
       amount: -amount,
       type: "expense",
       category: billCategory || "Bills",
-    });
+    };
 
-    setBillAmount("");
-    setBillCategory("");
+    // First update UI for immediate feedback
+    addTransaction(transactionData);
+
+    // Then send to backend
+    const result = await apiCall("/transactions", "POST", transactionData);
+
+    if (result) {
+      // Clear form fields
+      setBillAmount("");
+      setBillCategory("");
+    }
+
+    setIsLoading(false);
   };
 
-  const handleTransfer = () => {
+  const handleTransfer = async () => {
     const amount = parseFloat(transferAmount);
     if (isNaN(amount) || amount <= 0) return;
 
-    addTransaction({
+    setIsLoading(true);
+    setError(null);
+
+    const transactionData = {
       description: `Transfer${
         transferRecipient ? ` to ${transferRecipient}` : ""
       }`,
       amount: -amount,
       type: "transfer",
       recipient: transferRecipient || "Other Account",
-    });
+    };
 
-    setTransferAmount("");
-    setTransferRecipient("");
+    // First update UI for immediate feedback
+    addTransaction(transactionData);
+
+    // Then send to backend
+    const result = await apiCall("/transactions", "POST", transactionData);
+
+    if (result) {
+      // Clear form fields
+      setTransferAmount("");
+      setTransferRecipient("");
+    }
+
+    setIsLoading(false);
   };
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
+      {error && (
+        <div className="col-span-3 bg-red-100 text-red-700 p-3 rounded-md mb-4">
+          {error}
+        </div>
+      )}
+
       {/* Quick Deposit Card */}
       <div className="bg-white rounded-lg shadow-sm transition-shadow hover:shadow-lg">
         <div className="p-6">
@@ -91,9 +171,9 @@ export function ActionCards({ addTransaction }) {
             <button
               className="w-full rounded-md bg-green-600 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50"
               onClick={handleDeposit}
-              disabled={!depositAmount}
+              disabled={!depositAmount || isLoading}
             >
-              Deposit
+              {isLoading ? "Processing..." : "Deposit"}
             </button>
           </div>
         </div>
@@ -142,9 +222,9 @@ export function ActionCards({ addTransaction }) {
             <button
               className="w-full rounded-md bg-red-600 py-2 font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
               onClick={handlePayBill}
-              disabled={!billAmount}
+              disabled={!billAmount || isLoading}
             >
-              Pay
+              {isLoading ? "Processing..." : "Pay"}
             </button>
           </div>
         </div>
@@ -193,9 +273,9 @@ export function ActionCards({ addTransaction }) {
             <button
               className="w-full rounded-md bg-blue-600 py-2 font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
               onClick={handleTransfer}
-              disabled={!transferAmount}
+              disabled={!transferAmount || isLoading}
             >
-              Send
+              {isLoading ? "Processing..." : "Send"}
             </button>
           </div>
         </div>

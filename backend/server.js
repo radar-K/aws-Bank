@@ -193,10 +193,17 @@ app.delete("/users", authenticateToken, async (req, res) => {
 
 // ==================== TRANSACTION API ENDPOINTS ====================
 
-// Get all transactions for the logged-in user
+// Definierar en POST-endpoint som hämtar transaktionerna för inloggad user.
+// authenticateToken → Middleware som kontrollerar att användaren har en giltig JWT-token
 app.get("/transactions", authenticateToken, async (req, res) => {
-  const userId = req.user.userId;
+  const userId = req.user.userId; // Hämtar användar-ID från JWT-tokenen.
 
+  // kontrollera att obligatoriska fält finns
+  if (!description || amount === undefined || !type) {
+    return res.status(400).json({ message: "belopp och typ krävs" });
+  }
+
+  // spara transaktionen i databasen
   try {
     const sql =
       "SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC";
