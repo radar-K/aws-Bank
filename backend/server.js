@@ -195,6 +195,7 @@ app.delete("/users", authenticateToken, async (req, res) => {
 
 // Definierar en POST-endpoint som hämtar transaktionerna för inloggad user.
 // authenticateToken → Middleware som kontrollerar att användaren har en giltig JWT-token
+
 app.get("/transactions", authenticateToken, async (req, res) => {
   const userId = req.user.userId; // Hämtar användar-ID från JWT-tokenen.
 
@@ -208,9 +209,9 @@ app.get("/transactions", authenticateToken, async (req, res) => {
     const sql =
       "SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC";
     const params = [userId];
-    const transactions = await query(sql, params);
+    const transactions = await query(sql, params); // exekvera SQL-frågan
 
-    res.json(transactions);
+    res.json(transactions); // Skicka tillbaka datan som JSON
   } catch (error) {
     res.status(500).json({
       message: "Fel vid hämtning av transaktioner",
@@ -219,7 +220,7 @@ app.get("/transactions", authenticateToken, async (req, res) => {
   }
 });
 
-// Add a new transaction
+// Skapa en ny transaktion
 app.post("/transactions", authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const { description, amount, type, category, recipient } = req.body;

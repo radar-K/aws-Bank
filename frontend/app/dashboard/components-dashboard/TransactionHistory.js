@@ -1,19 +1,40 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect, use } from "react";
 
 export function TransactionHistory({ transactions }) {
-  // Sort transactions by date (newest first)
+  const [transaction, setTransactions] = useState([]);
+
+  useEffect(() => {
+    // Hämta transaktionerna från backend
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch("/transactions", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Förutsatt att du lagrar JWT-tokenen i localStorage
+          },
+        });
+        const data = await response.json();
+        setTransactions(data);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+    fetchTransactions();
+  }, []); // Anropa funktionen för att hämta transaktionerna
+
+  // Sortera transaktionerna efter datum (nyast först)
   const sortedTransactions = [...transactions].sort(
     (a, b) => b.date.getTime() - a.date.getTime()
   );
 
-  // Format date to readable string
+  // Formatera datum till en läsbar sträng
   const formatDate = (date) => {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return date.toLocaleDateString("en-US", options);
   };
 
-  // Get transaction icon and styles based on type
+  // Hämta ikonen för transaktionen baserat på typ
   const getTransactionIcon = (type, amount) => {
     switch (type) {
       case "deposit":
