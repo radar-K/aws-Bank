@@ -19,6 +19,5 @@ services: # Definierar en tjänst (container) som ska köras
       - "3307:3306" # Mappning av port 3307 på värddatorn till port 3306 i container
     volumes:
       - mysql-data:/var/lib/mysql
-
 volumes:
   mysql-data:
