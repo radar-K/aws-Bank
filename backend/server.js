@@ -258,6 +258,6 @@ app.post("/transactions", authenticateToken, async (req, res) => {
 });
 
 // Starta servern
-app.listen(port, () => {
-  console.log(`Bankens backend körs på http://13.49.18.194:3001:${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Bankens backend körs på http://13.49.18.194:${port}`);
 });
