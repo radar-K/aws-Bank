@@ -17,9 +17,9 @@ const JWT_SECRET = "secretkey"; // Secret key for JWT (use environment variable 
 const pool = mysql.createPool({
   user: "root", // Databasanvändare,
   password: "root", // Databaslösenord,    tom sträng eller root
-  host: "localhost", // Databasens IP-adress eller domän
+  host: "mysql", // Databasens IP-adress eller domän
   database: "bank", // Databasens namn
-  port: "8889", // Kolla port på MAMP
+  port: "3307", // Kolla port på MAMP
 });
 
 // help function to make code look nicer
