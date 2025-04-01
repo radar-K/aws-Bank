@@ -7,13 +7,13 @@ services: # Definierar en tjänst (container) som ska köras
   backend:
     build: ./backend # Anger vägen till Dockerfile i backend-mappen
     ports:
-      - "3001:3001" # Mappning av port 3000 på värddatorn till port
+      - "3001:3001" # Mappning av port 3001 på värddatorn till port 3001 i container
 
   mysql:
     image: mysql:5.7
     platform: linux/amd64
     environment:
-      - MYSQL_ROOT_PASSWORD: "root"
-      - MYSQL_DATABASE: "bank"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "bank"
     ports:
-      - "3307:3306"
+      - "3307:3306" # Mappning av port 3307 på värddatorn till port 3306 i container
