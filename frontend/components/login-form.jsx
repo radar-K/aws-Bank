@@ -26,7 +26,7 @@ export function LoginForm({ className, ...props }) {
 
     try {
       // Skicka en POST-begäran till backend för att logga in användaren
-      const response = await fetch("13.49.18.194:3000", {
+      const response = await fetch("13.49.18.194:3001", {
         // hämtar
         method: "POST",
         headers: {
