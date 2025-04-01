@@ -26,17 +26,14 @@ export function LoginForm({ className, ...props }) {
 
     try {
       // Skicka en POST-begäran till backend för att logga in användaren
-      const response = await fetch(
-        "ec2-13-49-18-194.eu-north-1.compute.amazonaws.com",
-        {
-          // hämtar
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Vi talar om för servern att skicka och ta emot JSON
-          },
-          body: JSON.stringify({ username, password }), // Hämtar från useState, och skickar användarnamn och lösenord som JSON till backend
-        }
-      );
+      const response = await fetch("13.49.18.194:3000", {
+        // hämtar
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Vi talar om för servern att skicka och ta emot JSON
+        },
+        body: JSON.stringify({ username, password }), // Hämtar från useState, och skickar användarnamn och lösenord som JSON till backend
+      });
 
       // response data som innehåller token från backend
       const data = await response.json();

@@ -22,17 +22,14 @@ export function ActionCards({ addTransaction }) {
     }
 
     try {
-      const response = await fetch(
-        `ec2-13-49-18-194.eu-north-1.compute.amazonaws.com${url}`,
-        {
-          method,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: data ? JSON.stringify(data) : undefined,
-        }
-      );
+      const response = await fetch(`13.49.18.194:3000${url}`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: data ? JSON.stringify(data) : undefined,
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
