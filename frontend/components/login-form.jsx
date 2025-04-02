@@ -27,7 +27,6 @@ export function LoginForm({ className, ...props }) {
     try {
       // Skicka en POST-begäran till backend för att logga in användaren
       const response = await fetch("http://13.49.18.194:3001", {
-        // hämtar
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Vi talar om för servern att skicka och ta emot JSON
@@ -51,9 +50,11 @@ export function LoginForm({ className, ...props }) {
         router.push("/dashboard");
       } else {
         setError("Felaktigt användarnamn eller lösenord.");
+        console.error("Fel från servern:", response.statusText);
       }
     } catch (error) {
       setError("Serverfel. Försök igen senare.");
+      console.error("Fel vid fetch-anrop:", error);
     }
   };
 

@@ -1,37 +1,43 @@
-# name: Deploy to EC2
+name: Deploy to EC2 # Namn på arbetsflödet
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main # Kör detta arbetsflöde när kod pushas till grenen "main"
 
-# jobs:
-#   deployment:
-#     name: Deploy
-#     runs-on: ubuntu-latest
+jobs:
+  deployment: # Namn på jobbet
+    name: Deploy
+    runs-on: ubuntu-latest # Jobbet körs på en Ubuntu-maskin
 
-#     steps:
-#       -name: Check out Repo
-#       uses: actions/checkout@v4
+    steps:
+      # Steg 1: Hämta den senaste versionen av repository
+      - name: Check out Repo
+        uses: actions/checkout@v4 # Använder en inbyggd GitHub Action för att checka ut koden från repository
 
-#       -name: Copy files to EC2
-#       uses: appleboy/scp-action@master
-#       with:
-#         host: ${{ secrets.HOST }}
-#         username: ${{ secrets.USERNAME }}
-#         key: ${{ secrets.SSH_KEY }}
-#         port: 22
-#         source: "."
-#         target: "/home/ubuntu/?"
+      # Steg 2: Kopiera filer till EC2-servern med SCP (Secure Copy)
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master # Använder en action för att kopiera filer via SCP
+        with:
+          host: ${{ secrets.HOST }} # IP eller domän för EC2-instansen (lagrad som en hemlighet i GitHub)
+          username: ${{ secrets.USERNAME }} # Användarnamn för SSH-inloggning
+          key: ${{ secrets.SSH_KEY }} # SSH-nyckel för autentisering
+          port: 22 # Standardport för SSH
+          source: "." # Kopierar alla filer från repository
+          target: "/home/ubuntu/docker-github-actions" # Målmapp på EC2 (OBS: `?` måste ersättas med en riktig katalog)
 
-#       -name: Run Docker on EC2
-#       uses: appleboy/scp-action@master
-#       with:
-#         host: ${{ secrets.HOST }}
-#         username: ${{ secrets.USERNAME }}
-#         key: ${{ secrets.SSH_KEY }}
-#         port: 22
-#         script:
-#           cd/home/ubuntu/docker-github-actions
-#           sudo docker compose down
-#           sudo docker compose up -d --build
+      # Steg 3: Starta om Docker-containern på EC2
+      - name: Run Docker on EC2
+        uses: appleboy/ssh-action@master # Använder SSH-action för att köra kommandon på EC2
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: | # Kör följande kommandon på EC2
+            cd /home/ubuntu/docker-github-actions  
+            sudo docker compose down
+
+# Navigera till katalogen där Docker-filerna finns
+# Stoppa och ta bort gamla containrar
+# Bygg och starta containrarna i bakgrunden
