@@ -22,7 +22,7 @@ export function ActionCards({ addTransaction }) {
     }
 
     try {
-      const response = await fetch(`13.49.18.194:3001${url}`, {
+      const response = await fetch(`http://13.49.18.194:3001${url}`, {
         method,
         headers: {
           "Content-Type": "application/json",

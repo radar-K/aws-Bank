@@ -43,7 +43,7 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch("13.49.18.194:3001", {
+      const response = await fetch("http://13.49.18.194:3001", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
