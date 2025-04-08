@@ -6,6 +6,29 @@ on:
       - main # Kör detta arbetsflöde när kod pushas till grenen "main"
 
 jobs:
+  test:
+    name: Test with React Testing Library
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run Test
+        working-directory: ./frontend
+        run: npm run test:ci
+        env:
+          CI: true
+
   deployment: # Namn på jobbet
     name: Deploy
     runs-on: ubuntu-latest # Jobbet körs på en Ubuntu-maskin

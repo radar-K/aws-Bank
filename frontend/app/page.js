@@ -6,7 +6,6 @@ export default function Homepage() {
   return (
     <div>
       <SignUp />
-      <p>hej</p>
     </div>
   );
 }
