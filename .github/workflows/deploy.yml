@@ -14,7 +14,7 @@ jobs:
       - name: Check out Repo
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@4
         with:
           node-version: "20"
@@ -60,6 +60,7 @@ jobs:
           script: | # Kör följande kommandon på EC2
             cd /home/ubuntu/docker-github-actions  
             sudo docker compose down
+            sudo docker-compose up --build -d
 
 # Navigera till katalogen där Docker-filerna finns
 # Stoppa och ta bort gamla containrar
