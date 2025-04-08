@@ -60,7 +60,6 @@ jobs:
           script: | # Kör följande kommandon på EC2
             cd /home/ubuntu/docker-github-actions  
             sudo docker compose down
-            sudo docker-compose up --build -d
 
 # Navigera till katalogen där Docker-filerna finns
 # Stoppa och ta bort gamla containrar
