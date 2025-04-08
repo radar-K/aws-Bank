@@ -57,4 +57,3 @@ jobs:
           script: |
             cd /home/ubuntu/docker-github-actions
             sudo docker-compose down
-            sudo docker-compose up --build -d
