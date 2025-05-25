@@ -13,6 +13,7 @@ export function Dashboard() {
       description: "Salary",
       amount: 3000,
       type: "deposit",
+      category: "Income",
     },
     {
       id: "2",
@@ -25,10 +26,10 @@ export function Dashboard() {
     {
       id: "3",
       date: new Date(2023, 10, 10),
-      description: "Drugs",
+      description: "Bribe",
       amount: -150,
       type: "expense",
-      category: "Food",
+      category: "Survival",
     },
     {
       id: "4",
@@ -36,6 +37,7 @@ export function Dashboard() {
       description: "Side Project",
       amount: 500,
       type: "deposit",
+      category: "Utilities",
     },
     {
       id: "5",
@@ -43,7 +45,7 @@ export function Dashboard() {
       description: "Coffe",
       amount: -75,
       type: "expense",
-      category: "Utilities",
+      category: "Groceries",
     },
     {
       id: "6",

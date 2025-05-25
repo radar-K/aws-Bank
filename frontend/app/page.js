@@ -1,11 +1,11 @@
 "use client";
 
-import SignUp from "../app/signup/page";
+import { Dashboard } from "./dashboard/components-dashboard/Dashboard";
 
 export default function Homepage() {
   return (
     <div>
-      <SignUp />
+      <Dashboard />
     </div>
   );
 }
