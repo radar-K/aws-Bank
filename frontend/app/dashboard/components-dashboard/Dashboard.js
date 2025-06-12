@@ -26,7 +26,7 @@ export function Dashboard() {
     {
       id: "3",
       date: new Date(2025, 0o4, 10),
-      description: "Bribe",
+      description: "Secret business",
       amount: -150,
       type: "expense",
       category: "Survival",

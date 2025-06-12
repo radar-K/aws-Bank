@@ -24,7 +24,7 @@ import {
 const data = {
   user: {
     name: "Bank Kund",
-    email: "Kundmail@chas.com",
+    email: "Kundmail@fiffel.com",
   },
   teams: [
     {

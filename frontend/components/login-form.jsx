@@ -19,7 +19,6 @@ export function LoginForm({ className, ...props }) {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  // hindrar vi den traditionella sidomladdningen som sker vid formulärinlämning och istället hanterar vi inlämningen asynkront med JavaScript.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
