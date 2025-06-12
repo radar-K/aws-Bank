@@ -7,6 +7,26 @@ import jwt from "jsonwebtoken"; // Add JWT import
 
 const app = express();
 
+// CORS middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
+// Befintliga middleware
+app.use(express.json());
+
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -17,9 +37,9 @@ const JWT_SECRET = "secretkey"; // Secret key for JWT (use environment variable 
 const pool = mysql.createPool({
   user: "root", // Databasanvändare,
   password: "root", // Databaslösenord,    tom sträng eller root
-  host: "mysql", // Databasens IP-adress eller domän
+  host: "localhost", // Ändra till "localhost" om du kör utan Docker
   database: "bank", // Databasens namn
-  port: "3307", // Kolla port på MAMP
+  port: 8889, // Standard MySQL port (ändra till 3307 om du använder MAMP)
 });
 
 // help function to make code look nicer
@@ -193,26 +213,24 @@ app.delete("/users", authenticateToken, async (req, res) => {
 
 // ==================== TRANSACTION API ENDPOINTS ====================
 
-// Definierar en POST-endpoint som hämtar transaktionerna för inloggad user.
-// authenticateToken → Middleware som kontrollerar att användaren har en giltig JWT-token
-
+// Hämta transaktioner för inloggad användare
 app.get("/transactions", authenticateToken, async (req, res) => {
-  const userId = req.user.userId; // Hämtar användar-ID från JWT-tokenen.
+  const userId = req.user.userId;
+  console.log("Fetching transactions for userId:", userId);
 
-  // kontrollera att obligatoriska fält finns
-  if (!description || amount === undefined || !type) {
-    return res.status(400).json({ message: "belopp och typ krävs" });
-  }
-
-  // spara transaktionen i databasen
   try {
+    // Använd rätt kolumnnamn baserat på din databas
     const sql =
-      "SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC";
+      "SELECT * FROM transactions WHERE user_id = ? ORDER BY date DESC";
     const params = [userId];
-    const transactions = await query(sql, params); // exekvera SQL-frågan
+    console.log("SQL:", sql, "Params:", params);
 
-    res.json(transactions); // Skicka tillbaka datan som JSON
+    const transactions = await query(sql, params);
+    console.log("Found transactions:", transactions.length);
+
+    res.json(transactions);
   } catch (error) {
+    console.error("Error fetching transactions:", error);
     res.status(500).json({
       message: "Fel vid hämtning av transaktioner",
       error: error.message,
@@ -225,6 +243,15 @@ app.post("/transactions", authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const { description, amount, type, category, recipient } = req.body;
 
+  console.log("Creating transaction:", {
+    userId,
+    description,
+    amount,
+    type,
+    category,
+    recipient,
+  });
+
   if (!description || amount === undefined || !type) {
     return res
       .status(400)
@@ -232,16 +259,20 @@ app.post("/transactions", authenticateToken, async (req, res) => {
   }
 
   try {
+    // Använd rätt kolumnnamn - transaction_type istället för type
     const sql =
-      "INSERT INTO transactions (user_id, description, amount, type, category, recipient, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())";
+      "INSERT INTO transactions (user_id, description, amount, transaction_type, category, recipient, date) VALUES (?, ?, ?, ?, ?, ?, NOW())";
     const params = [
       userId,
       description,
       amount,
-      type,
+      type, // Detta värde går in i transaction_type kolumnen
       category || null,
       recipient || null,
     ];
+
+    console.log("SQL:", sql);
+    console.log("Params:", params);
 
     const result = await query(sql, params);
 
@@ -250,6 +281,7 @@ app.post("/transactions", authenticateToken, async (req, res) => {
       transactionId: result.insertId,
     });
   } catch (error) {
+    console.error("Error creating transaction:", error);
     res.status(500).json({
       message: "Fel vid skapande av transaktion",
       error: error.message,
@@ -259,5 +291,5 @@ app.post("/transactions", authenticateToken, async (req, res) => {
 
 // Starta servern
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Bankens backend körs på http://13.49.18.194:${port}`);
+  console.log(`Bankens backend körs på http://localhost:3001${port}`);
 });

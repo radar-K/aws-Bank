@@ -9,15 +9,15 @@ export function Dashboard() {
   const [transactions, setTransactions] = useState([
     {
       id: "1",
-      date: new Date(2023, 10, 1),
+      date: new Date(2025, 0o4, 1),
       description: "Salary",
       amount: 3000,
-      type: "deposit",
+      type: "pay",
       category: "Income",
     },
     {
       id: "2",
-      date: new Date(2023, 10, 5),
+      date: new Date(2025, 0o4, 5),
       description: "Rent",
       amount: -1200,
       type: "expense",
@@ -25,7 +25,7 @@ export function Dashboard() {
     },
     {
       id: "3",
-      date: new Date(2023, 10, 10),
+      date: new Date(2025, 0o4, 10),
       description: "Bribe",
       amount: -150,
       type: "expense",
@@ -33,7 +33,7 @@ export function Dashboard() {
     },
     {
       id: "4",
-      date: new Date(2023, 10, 15),
+      date: new Date(2025, 0o4, 15),
       description: "Side Project",
       amount: 500,
       type: "deposit",
@@ -41,7 +41,7 @@ export function Dashboard() {
     },
     {
       id: "5",
-      date: new Date(2023, 10, 20),
+      date: new Date(2025, 0o4, 20),
       description: "Coffe",
       amount: -75,
       type: "expense",
@@ -49,10 +49,10 @@ export function Dashboard() {
     },
     {
       id: "6",
-      date: new Date(2023, 10, 25),
+      date: new Date(2025, 0o4, 25),
       description: "Transfer to Savings",
       amount: -300,
-      type: "transfer",
+      type: "send",
       recipient: "Savings Account",
     },
   ]);
@@ -60,6 +60,7 @@ export function Dashboard() {
   const [balance, setBalance] = useState(0);
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
+  const token = () => localStorage.getItem("token");
 
   // Calculate financial statistics
   useEffect(() => {

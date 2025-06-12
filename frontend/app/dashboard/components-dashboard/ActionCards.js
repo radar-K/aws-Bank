@@ -22,7 +22,7 @@ export function ActionCards({ addTransaction }) {
     }
 
     try {
-      const response = await fetch(`http://13.49.18.194:3001${url}`, {
+      const response = await fetch(`http://localhost:3001${url}`, {
         method,
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export function ActionCards({ addTransaction }) {
     const transactionData = {
       description: `Bill Payment${billCategory ? ` - ${billCategory}` : ""}`,
       amount: -amount,
-      type: "expense",
+      type: "pay",
       category: billCategory || "Bills",
     };
 
@@ -115,7 +115,7 @@ export function ActionCards({ addTransaction }) {
         transferRecipient ? ` to ${transferRecipient}` : ""
       }`,
       amount: -amount,
-      type: "transfer",
+      type: "send",
       recipient: transferRecipient || "Other Account",
     };
 

@@ -8,10 +8,11 @@ export function TransactionHistory({ transactions }) {
     // Hämta transaktionerna från backend
     const fetchTransactions = async () => {
       try {
-        const response = await fetch("/transactions", {
+        const response = await fetch("http://localhost:3001/transactions", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Förutsatt att du lagrar JWT-tokenen i localStorage
+            "Content-Type": "application/json",
           },
         });
         const data = await response.json();
@@ -57,6 +58,49 @@ export function TransactionHistory({ transactions }) {
             </svg>
           </div>
         );
+      case "pay":
+        return (
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4 text-red-600"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </div>
+        );
+      case "send":
+        return (
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4 text-blue-600"
+            >
+              <polyline points="17 1 21 5 17 9"></polyline>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+              <polyline points="7 23 3 19 7 15"></polyline>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+            </svg>
+          </div>
+        );
+      // Fallback cases för gamla transaktioner
       case "expense":
         return (
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
@@ -111,7 +155,7 @@ export function TransactionHistory({ transactions }) {
           <tr>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500€ uppercase tracking-wider w-[80px]"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[80px]"
             >
               Type
             </th>
