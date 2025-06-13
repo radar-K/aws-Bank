@@ -213,7 +213,7 @@ export function NavMain({ items }) {
                         // Visa inloggad användare och logout knapp
                         <div className="space-y-3">
                           <div className="text-sm text-green-600">
-                            ✓ Inloggad som:{" "}
+                            ✓ Logged in as:{" "}
                             <span className="font-medium">{loggedInUser}</span>
                           </div>
                           <Button
@@ -222,7 +222,7 @@ export function NavMain({ items }) {
                             variant="outline"
                             className="w-full h-8 text-xs text-red-600 border-red-200 hover:bg-red-50"
                           >
-                            Logga ut
+                            Sign out
                           </Button>
                         </div>
                       ) : isSignupMode ? (

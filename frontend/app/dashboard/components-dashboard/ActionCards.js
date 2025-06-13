@@ -17,7 +17,7 @@ export function ActionCards({ addTransaction }) {
     const token = getToken();
 
     if (!token) {
-      setError("You need to be logged in to perform this action");
+      setError("Create an account to save your transactions.");
       return null;
     }
 

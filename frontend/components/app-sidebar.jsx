@@ -38,31 +38,13 @@ const data = {
       title: "Login",
       url: "#",
       icon: FaUserAlt,
-    },
-    {
-      title: "Accounts",
-      url: "#",
-      icon: BsBank,
       isActive: true,
-      items: [
-        {
-          title: "My Wallet",
-          url: "#",
-        },
-        {
-          title: "Transfer",
-          url: "#",
-        },
-        {
-          title: "Credit",
-          url: "#",
-        },
-      ],
     },
     {
       title: "Messages",
       url: "#",
       icon: LuMessageSquare,
+      isActive: true,
       items: [
         {
           title: "Chat",
@@ -74,6 +56,26 @@ const data = {
         },
         {
           title: "Help & Support",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Accounts",
+      url: "#",
+      icon: BsBank,
+      isActive: false,
+      items: [
+        {
+          title: "My Wallet",
+          url: "#",
+        },
+        {
+          title: "Transfer",
+          url: "#",
+        },
+        {
+          title: "Credit",
           url: "#",
         },
       ],
