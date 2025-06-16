@@ -18,7 +18,7 @@ services:
     platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "bank"
+      MYSQL_DATABASE: "Bank"
     ports:
       - "3307:3306"
     volumes:
