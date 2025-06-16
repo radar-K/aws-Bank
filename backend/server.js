@@ -42,9 +42,9 @@ app.use(cors());
 const pool = mysql.createPool({
   user: "root",
   password: "root",
-  host: "localhost",
+  host: "mysql", //localhost
   database: "bank",
-  port: 8889,
+  port: 3306,
 });
 
 async function query(sql, params) {
