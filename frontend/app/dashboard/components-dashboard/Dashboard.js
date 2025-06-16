@@ -16,22 +16,6 @@ export function Dashboard() {
       category: "Income",
     },
     {
-      id: "2",
-      date: new Date(2025, 0o4, 5),
-      description: "Rent",
-      amount: -1200,
-      type: "expense",
-      category: "Housing",
-    },
-    {
-      id: "3",
-      date: new Date(2025, 0o4, 10),
-      description: "Secret business",
-      amount: -150,
-      type: "expense",
-      category: "Survival",
-    },
-    {
       id: "4",
       date: new Date(2025, 0o4, 15),
       description: "Side Project",
@@ -39,14 +23,7 @@ export function Dashboard() {
       type: "deposit",
       category: "Utilities",
     },
-    {
-      id: "5",
-      date: new Date(2025, 0o4, 20),
-      description: "Coffe",
-      amount: -75,
-      type: "expense",
-      category: "Groceries",
-    },
+
     {
       id: "6",
       date: new Date(2025, 0o4, 25),

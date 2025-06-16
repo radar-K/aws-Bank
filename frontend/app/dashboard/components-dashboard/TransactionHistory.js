@@ -9,39 +9,47 @@ const DEMO_TRANSACTIONS = [
     amount: 3500.0,
     transaction_type: "deposit",
     category: "Income",
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1), // 1 dag sedan
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1),
   },
   {
     id: "demo-2",
     description: "Grocery Shopping",
     amount: -89.5,
-    transaction_type: "pay",
+    transaction_type: "expense",
     category: "Food",
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 dagar sedan
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
   },
   {
     id: "demo-3",
     description: "Transfer to Mom",
     amount: -200.0,
-    transaction_type: "send",
+    transaction_type: "transfer",
     recipient: "Mom",
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 dagar sedan
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
   },
   {
     id: "demo-4",
     description: "Electric Bill",
     amount: -125.75,
-    transaction_type: "pay",
+    transaction_type: "bill",
     category: "Bills",
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5), // 5 dagar sedan
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
   },
   {
     id: "demo-5",
     description: "Freelance Payment",
     amount: 850.0,
-    transaction_type: "deposit",
+    transaction_type: "income",
     category: "Income",
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 1 vecka sedan
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+  },
+  {
+    id: "demo-6",
+    description: "Rent",
+    amount: -1200.0,
+    transaction_type: "rent",
+    category: "Housing",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10),
   },
 ];
 
@@ -126,9 +134,10 @@ export function TransactionHistory({ transactions: propTransactions = [] }) {
   };
 
   // Get transaction icon based on type
-  const getTransactionIcon = (type) => {
+  const getTransactionIcon = (type, transaction) => {
     switch (type) {
       case "deposit":
+      case "income":
         return (
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
             <svg
@@ -149,6 +158,13 @@ export function TransactionHistory({ transactions: propTransactions = [] }) {
           </div>
         );
       case "pay":
+      case "expense":
+      case "bill":
+      case "rent":
+      case "food":
+      case "groceries":
+      case "housing":
+      case "utilities":
         return (
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
             <svg
@@ -169,6 +185,7 @@ export function TransactionHistory({ transactions: propTransactions = [] }) {
           </div>
         );
       case "send":
+      case "transfer":
         return (
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
             <svg
@@ -191,7 +208,50 @@ export function TransactionHistory({ transactions: propTransactions = [] }) {
           </div>
         );
       default:
-        return null;
+        // Default ikon för okända typer (baserat på amount)
+        if (transaction?.amount >= 0) {
+          // Positiva belopp = grön upp-pil
+          return (
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 text-green-600"
+              >
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </div>
+          );
+        } else {
+          // Negativa belopp = röd ner-pil
+          return (
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 text-red-600"
+              >
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </div>
+          );
+        }
     }
   };
 
@@ -247,7 +307,8 @@ export function TransactionHistory({ transactions: propTransactions = [] }) {
               <tr key={transaction.id} className="hover:bg-gray-100">
                 <td className="px-6 py-4 whitespace-nowrap">
                   {getTransactionIcon(
-                    transaction.transaction_type || transaction.type
+                    transaction.transaction_type || transaction.type,
+                    transaction
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
