@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 import mysql from "mysql2/promise";
 import jwt from "jsonwebtoken";
@@ -40,7 +39,6 @@ app.use(
 
 // Middleware
 app.use(express.json());
-app.use(bodyParser.json());
 
 // Databasanslutning
 const pool = mysql.createPool({
