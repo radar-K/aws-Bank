@@ -1,45 +1,87 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 
-export function TransactionHistory({ transactions }) {
-  const [transaction, setTransactions] = useState([]);
+export function TransactionHistory() {
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Hämta transaktionerna från backend
     const fetchTransactions = async () => {
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("No authentication token found");
+          setLoading(false);
+          return;
+        }
+
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Förutsatt att du lagrar JWT-tokenen i localStorage
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
-        setTransactions(data);
+
+        // Convert date strings to Date objects
+        const transactionsWithDates = data.map((transaction) => ({
+          ...transaction,
+          date: new Date(transaction.date),
+        }));
+
+        setTransactions(transactionsWithDates);
       } catch (error) {
         console.error("Error fetching transactions:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchTransactions();
-  }, []); // Anropa funktionen för att hämta transaktionerna
 
-  // Sortera transaktionerna efter datum (nyast först)
+    fetchTransactions();
+  }, []);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="text-center py-4">
+        <div className="text-gray-500">Loading transactions...</div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="text-center py-4">
+        <div className="text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
+
+  // Sort transactions by date (newest first)
   const sortedTransactions = [...transactions].sort(
     (a, b) => b.date.getTime() - a.date.getTime()
   );
 
-  // Formatera datum till en läsbar sträng
+  // Format date to readable string
   const formatDate = (date) => {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return date.toLocaleDateString("en-US", options);
   };
 
-  // Hämta ikonen för transaktionen baserat på typ
-  const getTransactionIcon = (type, amount) => {
+  // Get transaction icon based on type
+  const getTransactionIcon = (type) => {
     switch (type) {
       case "deposit":
         return (
@@ -82,49 +124,6 @@ export function TransactionHistory({ transactions }) {
           </div>
         );
       case "send":
-        return (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4 text-blue-600"
-            >
-              <polyline points="17 1 21 5 17 9"></polyline>
-              <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-              <polyline points="7 23 3 19 7 15"></polyline>
-              <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-            </svg>
-          </div>
-        );
-      // Fallback cases för gamla transaktioner
-      case "expense":
-        return (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4 text-red-600"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <polyline points="19 12 12 19 5 12"></polyline>
-            </svg>
-          </div>
-        );
-      case "transfer":
         return (
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
             <svg
@@ -193,7 +192,7 @@ export function TransactionHistory({ transactions }) {
             sortedTransactions.map((transaction) => (
               <tr key={transaction.id} className="hover:bg-gray-100">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {getTransactionIcon(transaction.type, transaction.amount)}
+                  {getTransactionIcon(transaction.transaction_type)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="font-medium text-gray-900">
