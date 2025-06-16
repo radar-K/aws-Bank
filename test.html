@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>API Test</title>
+  </head>
+  <body>
+    <h1>Testa /ping från backend</h1>
+    <button onclick="testPing()">Testa Backend</button>
+    <pre id="output"></pre>
+
+    <script>
+      async function testPing() {
+        const output = document.getElementById("output");
+        output.textContent = "Kör test...";
+
+        try {
+          const response = await fetch("http://13.49.18.194:3001/ping");
+          const data = await response.json();
+          output.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          output.textContent = "Fel: " + error;
+        }
+      }
+    </script>
+  </body>
+</html>

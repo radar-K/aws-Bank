@@ -11,32 +11,36 @@ const app = express();
 const port = 3001;
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
 
-// CORS – tillåt specifika domäner
+// CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Tillåt requests utan origin (t.ex. mobila appar, Postman, curl)
+      if (!origin) return callback(null, true);
 
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
+    credentials: true,
+  })
+);
 
 // Middleware
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(cors());
 
 // Databasanslutning
 const pool = mysql.createPool({
