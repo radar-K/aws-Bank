@@ -1,20 +1,68 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-export function TransactionHistory() {
-  const [transactions, setTransactions] = useState([]);
+// Demo transactions som visas när man inte är inloggad
+const DEMO_TRANSACTIONS = [
+  {
+    id: "demo-1",
+    description: "Salary Deposit",
+    amount: 3500.0,
+    transaction_type: "deposit",
+    category: "Income",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1), // 1 dag sedan
+  },
+  {
+    id: "demo-2",
+    description: "Grocery Shopping",
+    amount: -89.5,
+    transaction_type: "pay",
+    category: "Food",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 dagar sedan
+  },
+  {
+    id: "demo-3",
+    description: "Transfer to Mom",
+    amount: -200.0,
+    transaction_type: "send",
+    recipient: "Mom",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 dagar sedan
+  },
+  {
+    id: "demo-4",
+    description: "Electric Bill",
+    amount: -125.75,
+    transaction_type: "pay",
+    category: "Bills",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5), // 5 dagar sedan
+  },
+  {
+    id: "demo-5",
+    description: "Freelance Payment",
+    amount: 850.0,
+    transaction_type: "deposit",
+    category: "Income",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 1 vecka sedan
+  },
+];
+
+export function TransactionHistory({ transactions: propTransactions = [] }) {
+  const [backendTransactions, setBackendTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const token = localStorage.getItem("token");
+
         if (!token) {
-          setError("No authentication token found");
+          // Ingen token - visa demo data
+          setIsLoggedIn(false);
           setLoading(false);
           return;
         }
+
+        setIsLoggedIn(true);
 
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
@@ -39,10 +87,11 @@ export function TransactionHistory() {
           date: new Date(transaction.date),
         }));
 
-        setTransactions(transactionsWithDates);
+        setBackendTransactions(transactionsWithDates);
       } catch (error) {
         console.error("Error fetching transactions:", error);
-        setError(error.message);
+        // Vid fel, visa demo data istället
+        setIsLoggedIn(false);
       } finally {
         setLoading(false);
       }
@@ -60,17 +109,13 @@ export function TransactionHistory() {
     );
   }
 
-  // Show error state
-  if (error) {
-    return (
-      <div className="text-center py-4">
-        <div className="text-red-500">Error: {error}</div>
-      </div>
-    );
-  }
+  // Bestäm vilka transaktioner som ska visas
+  const allTransactions = isLoggedIn
+    ? [...backendTransactions, ...propTransactions]
+    : [...DEMO_TRANSACTIONS, ...propTransactions];
 
   // Sort transactions by date (newest first)
-  const sortedTransactions = [...transactions].sort(
+  const sortedTransactions = [...allTransactions].sort(
     (a, b) => b.date.getTime() - a.date.getTime()
   );
 
@@ -152,6 +197,15 @@ export function TransactionHistory() {
 
   return (
     <div className="overflow-x-auto">
+      {!isLoggedIn && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <p className="text-sm text-blue-700">
+            📊 You're viewing demo transactions.{" "}
+            <strong>Create an account</strong> to save your real transactions!
+          </p>
+        </div>
+      )}
+
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
@@ -192,7 +246,9 @@ export function TransactionHistory() {
             sortedTransactions.map((transaction) => (
               <tr key={transaction.id} className="hover:bg-gray-100">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {getTransactionIcon(transaction.transaction_type)}
+                  {getTransactionIcon(
+                    transaction.transaction_type || transaction.type
+                  )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="font-medium text-gray-900">

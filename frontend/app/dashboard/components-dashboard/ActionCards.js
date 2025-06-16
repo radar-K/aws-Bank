@@ -9,7 +9,7 @@ export function ActionCards({ addTransaction }) {
   const [transferAmount, setTransferAmount] = useState("");
   const [transferRecipient, setTransferRecipient] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const getToken = () => localStorage.getItem("token");
 
@@ -17,8 +17,8 @@ export function ActionCards({ addTransaction }) {
     const token = getToken();
 
     if (!token) {
-      setError("Create an account to save your transactions.");
-      return null;
+      // Ingen token - bara returnera success för lokal hantering
+      return { success: true, local: true };
     }
 
     try {
@@ -38,8 +38,7 @@ export function ActionCards({ addTransaction }) {
 
       return await response.json();
     } catch (error) {
-      setError(error.message);
-      return null;
+      throw new Error(error.message);
     }
   };
 
@@ -48,7 +47,7 @@ export function ActionCards({ addTransaction }) {
     if (isNaN(amount) || amount <= 0) return;
 
     setIsLoading(true);
-    setError(null);
+    setMessage(null);
 
     const transactionData = {
       description: `Quick Deposit${
@@ -57,18 +56,32 @@ export function ActionCards({ addTransaction }) {
       amount,
       type: "deposit",
       category: depositCategory || "Income",
+      date: new Date(),
+      id: `local-${Date.now()}`,
     };
 
-    // First update UI for immediate feedback
-    addTransaction(transactionData);
+    try {
+      // Uppdatera UI först (alltid)
+      addTransaction(transactionData);
 
-    // Then send to backend
-    const result = await apiCall("/transactions", "POST", transactionData);
+      // Försök spara till backend om inloggad
+      const result = await apiCall("/transactions", "POST", transactionData);
 
-    if (result) {
-      // Clear form fields
+      if (result.local) {
+        setMessage(
+          "💡 Transaction added locally. Create an account to save permanently!"
+        );
+      } else {
+        setMessage("✅ Transaction saved successfully!");
+      }
+
+      // Rensa formulär
       setDepositAmount("");
       setDepositCategory("");
+    } catch (error) {
+      setMessage(
+        `❌ Local transaction added, but failed to save: ${error.message}`
+      );
     }
 
     setIsLoading(false);
@@ -79,25 +92,39 @@ export function ActionCards({ addTransaction }) {
     if (isNaN(amount) || amount <= 0) return;
 
     setIsLoading(true);
-    setError(null);
+    setMessage(null);
 
     const transactionData = {
       description: `Bill Payment${billCategory ? ` - ${billCategory}` : ""}`,
       amount: -amount,
       type: "pay",
       category: billCategory || "Bills",
+      date: new Date(),
+      id: `local-${Date.now()}`,
     };
 
-    // First update UI for immediate feedback
-    addTransaction(transactionData);
+    try {
+      // Uppdatera UI först (alltid)
+      addTransaction(transactionData);
 
-    // Then send to backend
-    const result = await apiCall("/transactions", "POST", transactionData);
+      // Försök spara till backend om inloggad
+      const result = await apiCall("/transactions", "POST", transactionData);
 
-    if (result) {
-      // Clear form fields
+      if (result.local) {
+        setMessage(
+          "💡 Transaction added locally. Create an account to save permanently!"
+        );
+      } else {
+        setMessage("✅ Transaction saved successfully!");
+      }
+
+      // Rensa formulär
       setBillAmount("");
       setBillCategory("");
+    } catch (error) {
+      setMessage(
+        `❌ Local transaction added, but failed to save: ${error.message}`
+      );
     }
 
     setIsLoading(false);
@@ -108,7 +135,7 @@ export function ActionCards({ addTransaction }) {
     if (isNaN(amount) || amount <= 0) return;
 
     setIsLoading(true);
-    setError(null);
+    setMessage(null);
 
     const transactionData = {
       description: `Transfer${
@@ -117,18 +144,32 @@ export function ActionCards({ addTransaction }) {
       amount: -amount,
       type: "send",
       recipient: transferRecipient || "Other Account",
+      date: new Date(),
+      id: `local-${Date.now()}`,
     };
 
-    // First update UI for immediate feedback
-    addTransaction(transactionData);
+    try {
+      // Uppdatera UI först (alltid)
+      addTransaction(transactionData);
 
-    // Then send to backend
-    const result = await apiCall("/transactions", "POST", transactionData);
+      // Försök spara till backend om inloggad
+      const result = await apiCall("/transactions", "POST", transactionData);
 
-    if (result) {
-      // Clear form fields
+      if (result.local) {
+        setMessage(
+          "💡 Transaction added locally. Create an account to save permanently!"
+        );
+      } else {
+        setMessage("✅ Transaction saved successfully!");
+      }
+
+      // Rensa formulär
       setTransferAmount("");
       setTransferRecipient("");
+    } catch (error) {
+      setMessage(
+        `❌ Local transaction added, but failed to save: ${error.message}`
+      );
     }
 
     setIsLoading(false);
@@ -136,9 +177,17 @@ export function ActionCards({ addTransaction }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {error && (
-        <div className="col-span-3 bg-red-100 text-red-700 p-3 rounded-md mb-4">
-          {error}
+      {message && (
+        <div
+          className={`col-span-3 p-3 rounded-md mb-4 ${
+            message.includes("❌")
+              ? "bg-red-100 text-red-700"
+              : message.includes("💡")
+              ? "bg-blue-100 text-blue-700"
+              : "bg-green-100 text-green-700"
+          }`}
+        >
+          {message}
         </div>
       )}
 
