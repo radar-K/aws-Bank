@@ -97,16 +97,16 @@ export function Dashboard() {
       {/* Action Cards */}
       <ActionCards addTransaction={addTransaction} />
 
-      {/* Transaction Overview */}
-      <div className="bg-white shadow-sm rounded-lg p-4">
-        <div className="mb-3 font-semibold text-lg">Transaction Overview</div>
-        <TransactionChart transactions={transactions} />
-      </div>
-
       {/* Transaction History */}
       <div className="bg-white shadow-sm rounded-lg p-4">
         <div className="mb-3 font-semibold text-lg">Transaction History</div>
         <TransactionHistory transactions={transactions} />
+      </div>
+
+      {/* Transaction Overview */}
+      <div className="bg-white shadow-sm rounded-lg p-4">
+        <div className="mb-3 font-semibold text-lg">Transaction Overview</div>
+        <TransactionChart transactions={transactions} />
       </div>
     </div>
   );
