@@ -9,7 +9,6 @@ export function ActionCards({ addTransaction }) {
   const [transferAmount, setTransferAmount] = useState("");
   const [transferRecipient, setTransferRecipient] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState(null);
 
   const getToken = () => localStorage.getItem("token");
 
@@ -17,8 +16,8 @@ export function ActionCards({ addTransaction }) {
     const token = getToken();
 
     if (!token) {
-      // Ingen token - bara returnera success för lokal hantering
-      return { success: true, local: true };
+      // Ingen token - bara returnera för lokal hantering
+      return;
     }
 
     try {
@@ -47,7 +46,6 @@ export function ActionCards({ addTransaction }) {
     if (isNaN(amount) || amount <= 0) return;
 
     setIsLoading(true);
-    setMessage(null);
 
     const transactionData = {
       description: `Quick Deposit${
@@ -65,23 +63,13 @@ export function ActionCards({ addTransaction }) {
       addTransaction(transactionData);
 
       // Försök spara till backend om inloggad
-      const result = await apiCall("/transactions", "POST", transactionData);
-
-      if (result.local) {
-        setMessage(
-          "💡 Transaction added locally. Create an account to save permanently!"
-        );
-      } else {
-        setMessage("✅ Transaction saved successfully!");
-      }
+      await apiCall("/transactions", "POST", transactionData);
 
       // Rensa formulär
       setDepositAmount("");
       setDepositCategory("");
     } catch (error) {
-      setMessage(
-        `❌ Local transaction added, but failed to save: ${error.message}`
-      );
+      console.error("Error saving transaction:", error);
     }
 
     setIsLoading(false);
@@ -92,7 +80,6 @@ export function ActionCards({ addTransaction }) {
     if (isNaN(amount) || amount <= 0) return;
 
     setIsLoading(true);
-    setMessage(null);
 
     const transactionData = {
       description: `Bill Payment${billCategory ? ` - ${billCategory}` : ""}`,
@@ -108,23 +95,13 @@ export function ActionCards({ addTransaction }) {
       addTransaction(transactionData);
 
       // Försök spara till backend om inloggad
-      const result = await apiCall("/transactions", "POST", transactionData);
-
-      if (result.local) {
-        setMessage(
-          "💡 Transaction added locally. Create an account to save permanently!"
-        );
-      } else {
-        setMessage("✅ Transaction saved successfully!");
-      }
+      await apiCall("/transactions", "POST", transactionData);
 
       // Rensa formulär
       setBillAmount("");
       setBillCategory("");
     } catch (error) {
-      setMessage(
-        `❌ Local transaction added, but failed to save: ${error.message}`
-      );
+      console.error("Error saving transaction:", error);
     }
 
     setIsLoading(false);
@@ -135,7 +112,6 @@ export function ActionCards({ addTransaction }) {
     if (isNaN(amount) || amount <= 0) return;
 
     setIsLoading(true);
-    setMessage(null);
 
     const transactionData = {
       description: `Transfer${
@@ -153,23 +129,13 @@ export function ActionCards({ addTransaction }) {
       addTransaction(transactionData);
 
       // Försök spara till backend om inloggad
-      const result = await apiCall("/transactions", "POST", transactionData);
-
-      if (result.local) {
-        setMessage(
-          "💡 Transaction added locally. Create an account to save permanently!"
-        );
-      } else {
-        setMessage("✅ Transaction saved successfully!");
-      }
+      await apiCall("/transactions", "POST", transactionData);
 
       // Rensa formulär
       setTransferAmount("");
       setTransferRecipient("");
     } catch (error) {
-      setMessage(
-        `❌ Local transaction added, but failed to save: ${error.message}`
-      );
+      console.error("Error saving transaction:", error);
     }
 
     setIsLoading(false);
@@ -177,20 +143,6 @@ export function ActionCards({ addTransaction }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {message && (
-        <div
-          className={`col-span-3 p-3 rounded-md mb-4 ${
-            message.includes("❌")
-              ? "bg-red-100 text-red-700"
-              : message.includes("💡")
-              ? "bg-blue-100 text-blue-700"
-              : "bg-green-100 text-green-700"
-          }`}
-        >
-          {message}
-        </div>
-      )}
-
       {/* Quick Deposit Card */}
       <div className="bg-white rounded-lg shadow-sm transition-shadow hover:shadow-lg">
         <div className="p-6">
