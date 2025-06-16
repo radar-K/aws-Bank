@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - frontend/.env.local
+      - NEXT_PUBLIC_API_URL=http://13.49.18.194:3001
 
   backend:
     build: ./backend
