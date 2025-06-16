@@ -8,13 +8,16 @@ export function TransactionHistory({ transactions }) {
     // Hämta transaktionerna från backend
     const fetchTransactions = async () => {
       try {
-        const response = await fetch("http://localhost:3001/transactions", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Förutsatt att du lagrar JWT-tokenen i localStorage
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // Förutsatt att du lagrar JWT-tokenen i localStorage
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await response.json();
         setTransactions(data);
       } catch (error) {

@@ -55,7 +55,7 @@ export function NavMain({ items }) {
     console.log("Skickar login data:", { username, password });
 
     try {
-      const response = await fetch("http://localhost:3001/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +123,7 @@ export function NavMain({ items }) {
     console.log("Skickar signup data:", { username, password });
 
     try {
-      const response = await fetch("http://localhost:3001/users", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
