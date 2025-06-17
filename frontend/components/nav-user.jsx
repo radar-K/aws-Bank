@@ -6,8 +6,10 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  LogIn,
   Sparkles,
 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -28,6 +30,33 @@ import {
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Kolla om användaren är inloggad
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem("token");
+      setIsLoggedIn(!!token);
+    };
+
+    checkLoginStatus();
+
+    // Lyssna på localStorage ändringar
+    window.addEventListener("storage", checkLoginStatus);
+
+    // Lyssna på custom events för login/logout
+    window.addEventListener("loginStateChanged", checkLoginStatus);
+
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+      window.removeEventListener("loginStateChanged", checkLoginStatus);
+    };
+  }, []);
+
+  const handleLogin = () => {
+    // Redirecta till login sidan
+    window.location.href = "/login";
+  };
 
   const handleLogout = () => {
     try {
@@ -36,12 +65,13 @@ export function NavUser({ user }) {
       localStorage.removeItem("user");
       localStorage.removeItem("userId");
 
-      // Redirect till login sidan
-      window.location.href = "/login";
+      // Uppdatera state
+      setIsLoggedIn(false);
+
+      // INTE redirecta - bara logga ut
+      console.log("User logged out successfully");
     } catch (error) {
       console.error("Logout error:", error);
-      // Fallback - ladda om sidan
-      window.location.reload();
     }
   };
 
@@ -59,8 +89,12 @@ export function NavUser({ user }) {
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">
+                  {isLoggedIn ? user.name : "Guest User"}
+                </span>
+                <span className="truncate text-xs">
+                  {isLoggedIn ? user.email : "Not logged in"}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -78,41 +112,59 @@ export function NavUser({ user }) {
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">
+                    {isLoggedIn ? user.name : "Guest User"}
+                  </span>
+                  <span className="truncate text-xs">
+                    {isLoggedIn ? user.email : "Not logged in"}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+            {isLoggedIn && (
+              <>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Sparkles />
+                    Upgrade to Pro
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <BadgeCheck />
+                    Account
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <CreditCard />
+                    Billing
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Bell />
+                    Notifications
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </>
+            )}
+            {isLoggedIn ? (
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <LogOut />
+                Sign out
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+            ) : (
+              <DropdownMenuItem
+                onClick={handleLogin}
+                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+              >
+                <LogIn />
+                Log in
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
